@@ -1,167 +1,150 @@
-# version: 2.1
-
-# orbs:
-#     docker: circleci/docker@1.0.1
-
-# jobs:
-#     prepare-dependencies:
-#         docker:
-#             - image: node:alpine
-#         steps:
-#             - checkout
-#             - run:
-#                   name: Compute version number
-#                   command: echo "0.0.${CIRCLE_BUILD_NUM}-${CIRCLE_SHA1:0:7}" | tee version.txt
-
-#     build-production:
-#         docker:
-#             - image: node:current-alpine
-#               auth:
-#                 username: mydockerhub-user
-#                 password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
-#         steps:
-#             - attach_workspace:
-#                   at: .
-#             - run:
-#                   name: Production build
-#                   command: |
-#                       export __BUILD_VERSION="$(cat version.txt)"
-#                       yarn build
-#             - store_artifacts:
-#                   path: dist/server.js
-#             - persist_to_workspace:
-#                   root: .
-#                   paths:
-#                       - .
-
-#     build-docker-image-backend:
-#         machine:
-#             image: ubuntu-1604:202004-01
-#         steps:
-#             - attach_workspace:
-#                   at: ./backend
-#             - run:
-#                   name: Setup __BUILD_VERSION envvar
-#                   command: |
-#                       echo "export __BUILD_VERSION=\"$(cat version.txt)\"" >> $BASH_ENV
-#             - docker/check:
-#                   registry: $DOCKER_REGISTRY
-#             - docker/build:
-#                   image: $DOCKER_IMAGE_NAME
-#                   tag: $__BUILD_VERSION
-#                   registry: $DOCKER_REGISTRY
-#             - docker/push:
-#                   image: $DOCKER_IMAGE_NAME
-#                   tag: $__BUILD_VERSION
-#                   registry: $DOCKER_REGISTRY
-
-#     build-docker-image-frontend:
-#         machine:
-#             image: ubuntu-1604:202004-01
-#         steps:
-#             - attach_workspace:
-#                   at: /frontend
-#             - run:
-#                   name: Setup __BUILD_VERSION envvar
-#                   command: |
-#                       echo "export __BUILD_VERSION=\"$(cat version.txt)\"" >> $BASH_ENV
-#             - docker/check:
-#                   registry: $DOCKER_REGISTRY
-#             - docker/build:
-#                   image: $DOCKER_IMAGE_NAME
-#                   tag: $__BUILD_VERSION
-#                   registry: $DOCKER_REGISTRY
-#             - docker/push:
-#                   image: $DOCKER_IMAGE_NAME
-#                   tag: $__BUILD_VERSION
-#                   registry: $DOCKER_REGISTRY
-
-#     test-frontend:
-#         docker:
-#             - image: circleci/node
-#         working_directory: ~/frontend
-#         steps:
-#             - checkout
-
-#             # Download and cache dependencies
-#             - restore_cache:
-#                   keys:
-#                   - v1-dependencies-{{ checksum "package.json" }}
-#                   # fallback to using the latest cache if no exact match is found
-#                   - v1-dependencies-
-
-#             - run: npm install
-
-#             - save_cache:
-#                   paths:
-#                         - node_modules
-#                   key: v1-dependencies-{{ checksum "package.json" }}
-
-#             # run tests!
-#             - run: npm test
-
-#     deploy-docker-image:
-#         machine:
-#             image: ubuntu-1604:202004-01
-#         steps:
-#             - attach_workspace:
-#                   at: .
-#             - run:
-#                   name: Setup __BUILD_VERSION envvar
-#                   command: |
-#                       echo "export __BUILD_VERSION=\"$(cat version.txt)\"" >> $BASH_ENV
-#             - docker/check:
-#                   registry: $DOCKER_REGISTRY
-#             - docker/pull:
-#                   images: $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:$__BUILD_VERSION
-#             - run:
-#                   name: Tag the image as latest
-#                   command: docker tag $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:$__BUILD_VERSION $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:latest
-#             - docker/push:
-#                   image: $DOCKER_IMAGE_NAME
-#                   tag: latest
-#                   registry: $DOCKER_REGISTRY
-
-# workflows:
-#     version: 2
-#     build-test-deploy:
-#         jobs:
-#             # - prepare-dependencies
-#             # - build-production:
-#             #       requires:
-#             #           - prepare-dependencies
-#             # - build-docker-image-backend:
-#             #       context: docker-hub
-#             #       requires:
-#             #           - build-production
-#             # - build-docker-image-frontend:
-#             #       context: docker-hub
-#             #       requires:
-#             #           - build-production
-#             - test-frontend
-#                   # requires:
-#                   #     - prepare-dependencies
-#             # - deploy-docker-image-backend:
-#             #       context: docker-hub
-#             #       requires:
-#             #           - build-docker-image-backend
-#             # - deploy-docker-image-frontend:
-#             #       context: docker-hub
-#             #       requires:
-#             #           - build-docker-image-frontend
-#             #           - test-frontend
 version: 2.1
+
 orbs:
-  node: circleci/node@1.1
+    docker: circleci/docker@1.0.1
+
 jobs:
-  build:
-    working_directory: ~/frontend
-    executor:
-      name: node/default
-      tag: '10.4'
-    steps:
-      - checkout
-      - node/with-cache:
-          steps:
-            - run: npm install
-      - run: npm run test
+    prepare-dependencies:
+        docker:
+            - image: node:alpine
+        steps:
+            - checkout
+            - run:
+                  name: Compute version number
+                  command: echo "0.0.${CIRCLE_BUILD_NUM}-${CIRCLE_SHA1:0:7}" | tee version.txt
+
+    build-production:
+        docker:
+            - image: node:current-alpine
+              auth:
+                username: mydockerhub-user
+                password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
+        steps:
+            - attach_workspace:
+                  at: .
+            - run:
+                  name: Production build
+                  command: |
+                      export __BUILD_VERSION="$(cat version.txt)"
+                      yarn build
+            - store_artifacts:
+                  path: dist/server.js
+            - persist_to_workspace:
+                  root: .
+                  paths:
+                      - .
+
+    build-docker-image-backend:
+        machine:
+            image: ubuntu-1604:202004-01
+        steps:
+            - attach_workspace:
+                  at: ./backend
+            - run:
+                  name: Setup __BUILD_VERSION envvar
+                  command: |
+                      echo "export __BUILD_VERSION=\"$(cat version.txt)\"" >> $BASH_ENV
+            - docker/check:
+                  registry: $DOCKER_REGISTRY
+            - docker/build:
+                  image: $DOCKER_IMAGE_NAME
+                  tag: $__BUILD_VERSION
+                  registry: $DOCKER_REGISTRY
+            - docker/push:
+                  image: $DOCKER_IMAGE_NAME
+                  tag: $__BUILD_VERSION
+                  registry: $DOCKER_REGISTRY
+
+    build-docker-image-frontend:
+        machine:
+            image: ubuntu-1604:202004-01
+        steps:
+            - attach_workspace:
+                  at: /frontend
+            - run:
+                  name: Setup __BUILD_VERSION envvar
+                  command: |
+                      echo "export __BUILD_VERSION=\"$(cat version.txt)\"" >> $BASH_ENV
+            - docker/check:
+                  registry: $DOCKER_REGISTRY
+            - docker/build:
+                  image: $DOCKER_IMAGE_NAME
+                  tag: $__BUILD_VERSION
+                  registry: $DOCKER_REGISTRY
+            - docker/push:
+                  image: $DOCKER_IMAGE_NAME
+                  tag: $__BUILD_VERSION
+                  registry: $DOCKER_REGISTRY
+
+    test-frontend:
+      working_directory: ~/frontend
+      docker:
+        - image: circleci/node:8.11.1
+      steps:
+        - checkout
+        - run:
+            name: npm-update
+            command: 'sudo npm install -g npm@latest'
+        - restore_cache:
+            key: dependency-cache-{{checksum "package-lock.json"}}
+        - run:
+            name: npm-install
+            command: npm install
+        - run:
+            name: test
+            command: npm test
+        - save_cache:
+            key: dependency-cache-{{checksum "package-lock.json"}}
+            paths:
+              - ./node_modules
+
+    deploy-docker-image:
+        machine:
+            image: ubuntu-1604:202004-01
+        steps:
+            - attach_workspace:
+                  at: .
+            - run:
+                  name: Setup __BUILD_VERSION envvar
+                  command: |
+                      echo "export __BUILD_VERSION=\"$(cat version.txt)\"" >> $BASH_ENV
+            - docker/check:
+                  registry: $DOCKER_REGISTRY
+            - docker/pull:
+                  images: $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:$__BUILD_VERSION
+            - run:
+                  name: Tag the image as latest
+                  command: docker tag $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:$__BUILD_VERSION $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:latest
+            - docker/push:
+                  image: $DOCKER_IMAGE_NAME
+                  tag: latest
+                  registry: $DOCKER_REGISTRY
+
+workflows:
+    version: 2
+    build-test-deploy:
+        jobs:
+            # - prepare-dependencies
+            # - build-production:
+            #       requires:
+            #           - prepare-dependencies
+            # - build-docker-image-backend:
+            #       context: docker-hub
+            #       requires:
+            #           - build-production
+            # - build-docker-image-frontend:
+            #       context: docker-hub
+            #       requires:
+            #           - build-production
+            - test-frontend
+                  # requires:
+                  #     - prepare-dependencies
+            # - deploy-docker-image-backend:
+            #       context: docker-hub
+            #       requires:
+            #           - build-docker-image-backend
+            # - deploy-docker-image-frontend:
+            #       context: docker-hub
+            #       requires:
+            #           - build-docker-image-frontend
+            #           - test-frontend
