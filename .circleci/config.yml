@@ -17,9 +17,8 @@ jobs:
   lint-and-test:
     executor:
       name: node/default
+    working_directory: ~/chat-app/frontend
     steps:
-      - attach_workspace:
-          at: ./chat-app/frontend
       - checkout
       - setup-node-and-yarn-install-with-cache
       - run:
@@ -30,3 +29,4 @@ workflows:
   run-ci:
     jobs:
       - lint-and-test
+
