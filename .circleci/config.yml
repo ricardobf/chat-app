@@ -129,9 +129,9 @@ workflows:
             #       context: docker-hub
             #       requires:
             #           - build-production
-            - test-frontend:
-                  requires:
-                      - prepare-dependencies
+            - test-frontend
+                  # requires:
+                  #     - prepare-dependencies
             # - deploy-docker-image-backend:
             #       context: docker-hub
             #       requires:
