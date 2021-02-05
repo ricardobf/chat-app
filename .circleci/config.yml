@@ -1,26 +1,32 @@
 version: 2.1
-jobs:
-  frontend-tests:
-    working_directory: ~/chat-app/frontend
-    docker:
-      - image: circleci/node
+
+orbs:
+  node: circleci/node@2.0.3
+
+commands:
+  setup-node-and-yarn-install-with-cache:
     steps:
+      - node/install:
+          install-yarn: true
+          node-version: latest
+      - node/install-packages:
+          pkg-manager: yarn
+          cache-key: yarn.lock
+
+jobs:
+  lint-and-test:
+    executor:
+      name: node/default
+    steps:
+      - attach_workspace:
+          at: ./chat-app/frontend
       - checkout
-      - restore_cache:
-          key: dependency-cache-{{checksum "package-lock.json"}}
-      - run:
-          name: Run installation
-          command: npm install
+      - setup-node-and-yarn-install-with-cache
       - run:
           name: Run tests
-          command: npm test
-      - save_cache:
-          key: dependency-cache-{{checksum "package-lock.json"}}
-          paths:
-            - ./node_modules
+          command: npm run test
 
 workflows:
-  version: 2
-  build-and-deploy:
+  run-ci:
     jobs:
-      - frontend-tests
+      - lint-and-test
