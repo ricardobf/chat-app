@@ -79,7 +79,7 @@ jobs:
     test-frontend:
         docker:
             - image: node:alpine
-        working_directory: ~/frontend
+        working_directory: /frontend
         steps:
             - run:
                   name: Install dependencies
@@ -88,7 +88,7 @@ jobs:
             - run:
                   name: Run tests
                   command: |
-                      npm run test
+                      npm test
 
     deploy-docker-image:
         machine:
