@@ -78,8 +78,8 @@ jobs:
 
     test-frontend:
         docker:
-            - image: node:alpine
-        working_directory: /frontend
+            - image: circleci/node
+        working_directory: ~/frontend
         steps:
             - run:
                   name: Install dependencies
