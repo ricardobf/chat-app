@@ -89,7 +89,7 @@ jobs:
             - run:
                   name: Run tests
                   command: |
-                      npm test
+                      npm run test
 
     deploy-docker-image:
         machine:
