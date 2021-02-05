@@ -79,9 +79,8 @@ jobs:
     test-frontend:
         docker:
             - image: node:alpine
+        working_directory: ~/frontend
         steps:
-            - attach_workspace:
-                  at: ./frontend
             - run:
                   name: Install dependencies
                   command: |
