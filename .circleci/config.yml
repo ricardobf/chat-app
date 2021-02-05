@@ -60,7 +60,7 @@ jobs:
             image: ubuntu-1604:202004-01
         steps:
             - attach_workspace:
-                  at: ./frontend
+                  at: /frontend
             - run:
                   name: Setup __BUILD_VERSION envvar
                   command: |
