@@ -14,5 +14,4 @@ jobs:
       - checkout:
           path: ~/chat-app
 
-      - run: npm install
       - run: npm test
