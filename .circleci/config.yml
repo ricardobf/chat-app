@@ -52,8 +52,7 @@ jobs:
 workflows:
   build-production:
     jobs:
-      - test-frontend:
-          context: test
+      - test-frontend
       - build-frontend-image:
           context: docker-hub
           requires: 
@@ -63,9 +62,7 @@ workflows:
           requires:
               - test-frontend
               - build-frontend-image
-      - build-backend-image:
-          context: docker-hub
+      - build-backend-image
       - deploy-backend-image:
-          context: docker-hub
           requires: 
               - build-backend-image
