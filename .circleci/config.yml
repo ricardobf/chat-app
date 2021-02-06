@@ -1,14 +1,19 @@
-version: 2
+version: 2.1
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - test-frontend
+
 jobs:
   test-frontend:
     working_directory: ~/chat-app/frontend
     docker:
       - image: circleci/node
-
     environment:
       REACT_APP_BACKEND_WS: ws://localhost:8080
       REACT_APP_BACKEND_URL: http://localhost:8080
-
     steps:
       - checkout:
           path: ~/chat-app
