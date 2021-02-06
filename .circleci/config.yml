@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+    docker: circleci/docker@1.0.1
+
 jobs:
   test-frontend:
     working_directory: ~/chat-app/frontend
@@ -15,21 +18,28 @@ jobs:
           key: dependency-cache-{{ checksum "package-lock.json" }}
       - run: 
           name: Install Dependencies
-          command: npm install
+          command: echo "npm-install"
       - save_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
             - ./node_modules
       - run: 
           name: Testing
-          command: npm test
+          command: echo "npm test"
 
   build-frontend-image:
     working_directory: ~/chat-app/frontend
-    docker:
-      - image: circleci/node
+    machine:
+      image: ubuntu-1604:202004-01
     steps:
-      - run: echo "build-frontend-image"
+        - docker/check:
+              registry: $DOCKER_REGISTRY
+        - docker/build:
+              image: $DOCKER_IMAGE_NAME
+              registry: $DOCKER_REGISTRY
+        - docker/push:
+              image: $DOCKER_IMAGE_NAME
+              registry: $DOCKER_REGISTRY
   deploy-frontend-image:
     working_directory: ~/chat-app/frontend
     docker:
@@ -37,13 +47,13 @@ jobs:
     steps:
       - run: echo "push-frontend-image"
   build-backend-image:
-    working_directory: ~/chat-app/frontend
+    working_directory: ~/chat-app/backend
     docker:
       - image: circleci/node
     steps:
       - run: echo "build-backend-image"
   deploy-backend-image:
-    working_directory: ~/chat-app/frontend
+    working_directory: ~/chat-app/backend
     docker:
       - image: circleci/node
     steps:
@@ -54,11 +64,9 @@ workflows:
     jobs:
       - test-frontend
       - build-frontend-image:
-          context: docker-hub
           requires: 
               - test-frontend
       - deploy-frontend-image:
-          context: docker-hub
           requires:
               - test-frontend
               - build-frontend-image
