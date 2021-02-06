@@ -15,7 +15,9 @@ services:
       REDIS_ADDR: redis:6379
   frontend:
     container_name: frontend
-    build: ./frontend
+    build: 
+      context: ./frontend
+      dockerfile: ./Dockerfile.development
     ports:
       - "3000:3000"
     environment:
