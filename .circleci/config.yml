@@ -39,14 +39,16 @@ jobs:
     #           registry: $DOCKER_REGISTRY
     working_directory: ~/chat-app/frontend
     docker:
-      - image: circleci/docker
+      - image: docker:17.05.0-ce-git
     steps:
       - checkout:
           path: ~/chat-app
       - setup_remote_docker
       - run:
-          name: Build Docker image
-          command: docker build -t $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:latest .
+          name: Build and deploy docker images
+          command: |
+            docker build -t $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME .
+
   # publish-latest:
   #   environment:
   #     IMAGE_NAME: building-on-ci
