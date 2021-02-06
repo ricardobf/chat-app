@@ -1,8 +1,5 @@
 version: 2.1
 
-orbs:
-    docker: circleci/docker@1.0.1
-
 jobs:
   test-frontend:
     working_directory: ~/chat-app/frontend
@@ -42,7 +39,7 @@ jobs:
     #           registry: $DOCKER_REGISTRY
     working_directory: ~/chat-app/frontend
     docker:
-      - image: circleci/buildpack-deps:stretch
+      - image: circleci/docker
     steps:
       - checkout:
           path: ~/chat-app
