@@ -35,7 +35,7 @@ jobs:
       - run:
           name: Build docker image
           command: |
-            docker build -t $DOCKER_REGISTRY/$DOCKER_FRONTEND_IMAGE_NAME -f Dockerfile.production .
+            docker build -t $DOCKER_REGISTRY/$DOCKER_FRONTEND_IMAGE_NAME -f "Dockerfile.production" .
       - run:
           name: Deploy docker image
           command: |
