@@ -1,11 +1,5 @@
 version: 2.1
 
-workflows:
-  version: 2
-  build:
-    jobs:
-      - test-frontend
-
 jobs:
   test-frontend:
     working_directory: ~/chat-app/frontend
@@ -29,3 +23,49 @@ jobs:
       - run: 
           name: Testing
           command: npm test
+
+  build-frontend-image:
+    working_directory: ~/chat-app/frontend
+    docker:
+      - image: circleci/node
+    steps:
+      - run: echo "build-frontend-image"
+  deploy-frontend-image:
+    working_directory: ~/chat-app/frontend
+    docker:
+      - image: circleci/node
+    steps:
+      - run: echo "push-frontend-image"
+  build-backend-image:
+    working_directory: ~/chat-app/frontend
+    docker:
+      - image: circleci/node
+    steps:
+      - run: echo "build-backend-image"
+  deploy-backend-image:
+    working_directory: ~/chat-app/frontend
+    docker:
+      - image: circleci/node
+    steps:
+      - run: echo "push-backend-image"
+
+workflows:
+  build-production:
+    jobs:
+      - test-frontend:
+          context: test
+      - build-frontend-image:
+          context: docker-hub
+          requires: 
+              - test-frontend
+      - deploy-frontend-image:
+          context: docker-hub
+          requires:
+              - test-frontend
+              - build-frontend-image
+      - build-backend-image:
+          context: docker-hub
+      - deploy-backend-image:
+          context: docker-hub
+          requires: 
+              - build-backend-image
