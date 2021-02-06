@@ -27,7 +27,7 @@ jobs:
   build-and-deploy-frontend:
     working_directory: ~/chat-app/frontend
     docker:
-      - image: docker:17.05.0-ce-git
+      - image: docker
     steps:
       - checkout:
           path: ~/chat-app
@@ -45,7 +45,7 @@ jobs:
   build-and-deploy-backend:
     working_directory: ~/chat-app/backend
     docker:
-      - image: docker:17.05.0-ce-git
+      - image: docker
     steps:
       - checkout:
           path: ~/chat-app
