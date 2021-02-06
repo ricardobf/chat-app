@@ -1,18 +1,60 @@
-# Teste Devops - Smarttbot
+# Chat App
 
-Dentro deste repositório você irá encontrar duas aplicações, uma escrita em Go (Backend) e outra em React (Frontend).
+[![GitHub license](https://img.shields.io/github/license/ricardobf/chat-app)](https://github.com/ricardobf/chat-app/blob/production/LICENSE)
+[![GitHub issues](https://img.shields.io/github/issues/ricardobf/chat-app)](https://github.com/ricardobf/chat-app/issues)
+[![GitHub stars](https://img.shields.io/github/stars/ricardobf/chat-app)](https://github.com/ricardobf/chat-app/stargazers)
 
-As aplicações compõem um sistema simples de chat que utiliza o Redis (https://redis.io/) para armazenamento das mensagens.
+This repository uses Go (Backend), React (Frontend) and Redis (Store messages) to deploy a simple chat-app application.
 
-Você deverá criar um repositório no Git de sua preferência (Gitlab, Github, Bitbucket, etc.) com o conteúdo deste repositório e as alterações que julgar necessárias para a criação de dois ambientes distintos:
+The production (backend) docker file is available on [DockerHub - ricardob/chat-app-backend](https://hub.docker.com/r/ricardob/chat-app-backend)
 
-- Desenvolvimento - Utilizando docker e docker-compose
-- Produção - Utilizando docker e uma ferramenta de CI/CD para automatizar o build e push das imagens docker para o DockerHub. Você pode escolher uma das seguintes ferramentas:
-  - CircleCI
-  - GitlabCI
-  - TravisCI
-  - Jenkins
+The production (frontend) docker file is available on [DockerHub - ricardob/chat-app-frontend](https://hub.docker.com/r/ricardob/chat-app-frontend)
 
-Além disso, você deverá documentar seu trabalho da melhor maneira possível. Quando finalizar, é só enviar o link do seu repositório pra gente.
+**Table of Contents**
 
-> OBS: As documentações das aplicações são propositalmente vagas, então recorra à leitura do código em caso de dúvidas sobre o funcionamento.
+1. [Requirements](#requirements)
+1. [Installation](#installation)
+1. [License](#license)
+
+## Requirements
+
+- Git;
+- Go; (for development installation)
+- Docker; (for development installation)
+- Docker Compose; (for development installation)
+- nodejs, npm; (for development installation)
+- Circle CI account; (for production deployment)
+
+## Development Installation
+
+### Install and run the application locally:
+
+Using Docker Compose:
+
+1. Clone this repository
+
+With SSH
+```shell
+# git clone git@github.com:ricardobf/chat-app.git
+```
+or with HTTPS
+```shell
+# git clone https://github.com/ricardobf/chat-app.git
+```
+
+2. Navigate to application folder:
+```shell
+# cd chat-app
+```
+
+3. Run `docker-compose` command:
+```shell
+# docker-compose up
+```
+
+4. On your browser navigate to [localhost:3000](http://localhost:3000)
+
+
+## License
+
+See [LICENSE](https://github.com/ricardobf/chat-app/LICENSE).
