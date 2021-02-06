@@ -24,8 +24,26 @@ jobs:
           name: Testing
           command: echo "npm test"
 
-  build-and-deploy-frontend-image:
+  build-and-deploy-frontend:
     working_directory: ~/chat-app/frontend
+    docker:
+      - image: docker:17.05.0-ce-git
+    steps:
+      - checkout:
+          path: ~/chat-app
+      - setup_remote_docker
+      - run:
+          name: Build docker image
+          command: |
+            docker build -t $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME -f Dockerfile.production .
+      - run:
+          name: Deploy docker image
+          command: |
+            docker login -u $DOCKER_LOGIN -p $DOCKER_PASSWORD
+            docker push $DOCKER_LOGIN/$DOCKER_IMAGE_NAME
+
+  build-and-deploy-backend:
+    working_directory: ~/chat-app/backend
     docker:
       - image: docker:17.05.0-ce-git
     steps:
@@ -42,18 +60,11 @@ jobs:
             docker login -u $DOCKER_LOGIN -p $DOCKER_PASSWORD
             docker push $DOCKER_LOGIN/$DOCKER_IMAGE_NAME
 
-  build-and-deploy-backend-image:
-    working_directory: ~/chat-app/backend
-    docker:
-      - image: circleci/node
-    steps:
-      - run: echo "build-and-deploy-backend-image"
-
 workflows:
   build-production:
     jobs:
       - test-frontend
-      - build-and-deploy-frontend-image:
+      - build-and-deploy-frontend:
           requires: 
               - test-frontend
-      - build-and-deploy-backend-image
+      - build-and-deploy-backend
