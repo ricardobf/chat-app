@@ -35,12 +35,12 @@ jobs:
       - run:
           name: Build docker image
           command: |
-            docker build -t $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME -f Dockerfile.production .
+            docker build -t $DOCKER_REGISTRY/$DOCKER_FRONTEND_IMAGE_NAME -f Dockerfile.production .
       - run:
           name: Deploy docker image
           command: |
             docker login -u $DOCKER_LOGIN -p $DOCKER_PASSWORD
-            docker push $DOCKER_LOGIN/$DOCKER_IMAGE_NAME
+            docker push $DOCKER_REGISTRY/$DOCKER_FRONTEND_IMAGE_NAME
 
   build-and-deploy-backend:
     working_directory: ~/chat-app/backend
@@ -53,12 +53,12 @@ jobs:
       - run:
           name: Build docker image
           command: |
-            docker build -t $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME .
+            docker build -t $DOCKER_REGISTRY/$DOCKER_BACKEND_IMAGE_NAME .
       - run:
           name: Deploy docker image
           command: |
             docker login -u $DOCKER_LOGIN -p $DOCKER_PASSWORD
-            docker push $DOCKER_LOGIN/$DOCKER_IMAGE_NAME
+            docker push $DOCKER_REGISTRY/$DOCKER_BACKEND_IMAGE_NAME
 
 workflows:
   build-production:
