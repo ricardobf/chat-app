@@ -70,7 +70,7 @@ Obs.: You can change environment varibles inside `docker-compose.yml` file.
 ![circleci-2](./images/circleci-2.png)
 
 4. On project settings, create environment variables according to your DockerHub account and image name:
-![circleci-envvar](./images/envvar.png)
+![circleci-envvar](./images/circleci-envvar.png)
 
 4. Wait for the pipeline to run.
 
