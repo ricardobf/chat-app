@@ -1,6 +1,6 @@
 # Chat App
 
-[![GitHub license](https://img.shields.io/github/license/ricardobf/chat-app)](https://github.com/ricardobf/chat-app/blob/production/LICENSE)
+[![GitHub license](https://img.shields.io/github/license/ricardobf/chat-app)](https://github.com/ricardobf/chat-app/blob/master/LICENSE)
 [![GitHub issues](https://img.shields.io/github/issues/ricardobf/chat-app)](https://github.com/ricardobf/chat-app/issues)
 [![GitHub stars](https://img.shields.io/github/stars/ricardobf/chat-app)](https://github.com/ricardobf/chat-app/stargazers)
 
