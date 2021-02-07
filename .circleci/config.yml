@@ -1,28 +1,28 @@
 version: 2.1
 
 jobs:
-  # test-frontend:
-  #   working_directory: ~/chat-app/frontend
-  #   docker:
-  #     - image: circleci/node
-  #   environment:
-  #     REACT_APP_BACKEND_WS: ws://localhost:8080
-  #     REACT_APP_BACKEND_URL: http://localhost:8080
-  #   steps:
-  #     - checkout:
-  #         path: ~/chat-app
-  #     - restore_cache:
-  #         key: dependency-cache-{{ checksum "package-lock.json" }}
-  #     - run: 
-  #         name: Install Dependencies
-  #         command: echo "npm-install"
-  #     - save_cache:
-  #         key: dependency-cache-{{ checksum "package-lock.json" }}
-  #         paths:
-  #           - ./node_modules
-  #     - run: 
-  #         name: Testing
-  #         command: echo "npm test"
+  test-frontend:
+    working_directory: ~/chat-app/frontend
+    docker:
+      - image: circleci/node
+    environment:
+      REACT_APP_BACKEND_WS: ws://localhost:8080
+      REACT_APP_BACKEND_URL: http://localhost:8080
+    steps:
+      - checkout:
+          path: ~/chat-app
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+      - run: 
+          name: Install Dependencies
+          command: npm install
+      - save_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - ./node_modules
+      - run: 
+          name: Testing
+          command: npm test
 
   build-and-deploy-frontend:
     working_directory: ~/chat-app/frontend
@@ -43,29 +43,32 @@ jobs:
             docker login -u $DOCKER_LOGIN -p $DOCKER_PASSWORD
             docker push $DOCKER_REGISTRY/$DOCKER_FRONTEND_IMAGE_NAME
 
-  # build-and-deploy-backend:
-  #   working_directory: ~/chat-app/backend
-  #   docker:
-  #     - image: docker
-  #   steps:
-  #     - checkout:
-  #         path: ~/chat-app
-  #     - setup_remote_docker
-  #     - run:
-  #         name: Build docker image
-  #         command: |
-  #           docker build -t $DOCKER_REGISTRY/$DOCKER_BACKEND_IMAGE_NAME .
-  #     - run:
-  #         name: Deploy docker image
-  #         command: |
-  #           docker login -u $DOCKER_LOGIN -p $DOCKER_PASSWORD
-  #           docker push $DOCKER_REGISTRY/$DOCKER_BACKEND_IMAGE_NAME
+  build-and-deploy-backend:
+    working_directory: ~/chat-app/backend
+    docker:
+      - image: docker
+    steps:
+      - checkout:
+          path: ~/chat-app
+      - setup_remote_docker:
+          version: 19.03.13
+      - run:
+          name: Build docker image
+          command: |
+            docker build -t $DOCKER_REGISTRY/$DOCKER_BACKEND_IMAGE_NAME .
+      - run:
+          name: Deploy docker image
+          command: |
+            docker login -u $DOCKER_LOGIN -p $DOCKER_PASSWORD
+            docker push $DOCKER_REGISTRY/$DOCKER_BACKEND_IMAGE_NAME
 
 workflows:
   build-production:
     jobs:
-      # - test-frontend
-      - build-and-deploy-frontend
-          # requires: 
-              # - test-frontend
-      # - build-and-deploy-backend
+      - test-frontend
+      - build-and-deploy-frontend:
+          requires: 
+            - test-frontend
+      - build-and-deploy-backend:
+          requires:
+            - build-and-deploy-frontend
