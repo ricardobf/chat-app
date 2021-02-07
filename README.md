@@ -5,6 +5,7 @@
 [![GitHub stars](https://img.shields.io/github/stars/ricardobf/chat-app)](https://github.com/ricardobf/chat-app/stargazers)
 
 This repository uses Go (Backend), React (Frontend) and Redis (Messages storage) to deploy a simple chat-app application.
+There is two frontend docker images (`Dockerfile.development` and `Dockerfile.production`), the first one is used by docker-compose for development environment and the other one is used by Circle CI for production environment.
 
 The production (backend) docker file is available on [DockerHub - ricardob/chat-app-backend](https://hub.docker.com/r/ricardob/chat-app-backend)
 
