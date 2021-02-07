@@ -7,7 +7,7 @@ WORKDIR /app
 # add `/app/node_modules/.bin` to $PATH
 ENV PATH /app/node_modules/.bin:$PATH
 
-COPY . .
+COPY . ./
 RUN npm install --silent --production
 RUN npm run build
 
