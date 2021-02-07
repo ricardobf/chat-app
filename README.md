@@ -4,7 +4,7 @@
 [![GitHub issues](https://img.shields.io/github/issues/ricardobf/chat-app)](https://github.com/ricardobf/chat-app/issues)
 [![GitHub stars](https://img.shields.io/github/stars/ricardobf/chat-app)](https://github.com/ricardobf/chat-app/stargazers)
 
-This repository uses Go (Backend), React (Frontend) and Redis (Store messages) to deploy a simple chat-app application.
+This repository uses Go (Backend), React (Frontend) and Redis (Messages storage) to deploy a simple chat-app application.
 
 The production (backend) docker file is available on [DockerHub - ricardob/chat-app-backend](https://hub.docker.com/r/ricardob/chat-app-backend)
 
@@ -31,7 +31,7 @@ The production (frontend) docker file is available on [DockerHub - ricardob/chat
 
 Using Docker Compose:
 
-1. Clone this repository
+1. Clone the repository
 
 With SSH
 ```shell
@@ -53,6 +53,26 @@ or with HTTPS
 ```
 
 4. On your browser navigate to [localhost:3000](http://localhost:3000)
+
+Obs.: You can change environment varibles inside `docker-compose.yml` file.
+
+## Production Installation
+
+### Running on Circle CI and GitHub
+
+1. Navigate to [github.com/ricardobf/chat-app](https://www.github.com/ricardobf/chat-app) and fork the repository to your own workspace:
+![github-fork](./images/github-fork.png)
+
+2. On another tab, navigate to [circleci.com](https://www.circleci.com) and create or login to an existing Circle CI account using GitHub:
+![circleci-1](./images/circleci-1.png)
+
+3. On Projects tab, choose the right repository application:
+![circleci-2](./images/circleci-2.png)
+
+4. On project settings, create environment variables according to your DockerHub account and image name:
+![circleci-envvar](./images/envvar.png)
+
+4. Wait for the pipeline to run.
 
 
 ## License
