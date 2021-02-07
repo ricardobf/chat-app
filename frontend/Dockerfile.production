@@ -9,6 +9,7 @@ ENV PATH /app/node_modules/.bin:$PATH
 
 COPY . ./
 RUN npm install --silent --production
+RUN npm install react-script
 RUN npm run build
 
 WORKDIR /app/build
