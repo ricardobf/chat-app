@@ -78,4 +78,4 @@ Obs.: You can change environment varibles inside `docker-compose.yml` file.
 
 ## License
 
-See [LICENSE](https://github.com/ricardobf/chat-app/LICENSE).
+This project uses [Apache License](https://github.com/ricardobf/chat-app/LICENSE).
