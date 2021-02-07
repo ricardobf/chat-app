@@ -17,7 +17,7 @@ services:
     container_name: frontend
     build: 
       context: ./frontend
-      dockerfile: ./Dockerfile.development
+      dockerfile: ./Dockerfile.production
     ports:
       - "3000:3000"
     environment:
